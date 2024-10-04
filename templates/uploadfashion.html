@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+</head>
+<body>
+    <!-- Include the navbar  -->
+    {%  include 'navbar.html' %}
+    <br>
+    <section class="row">
+        <div class="col-md-6 ms-5">
+            <div class="card shadow p-5">
+                <b class="text-success">{{ message }}</b>
+                <b class="text-danger">{{ error }}</b>
+                <h1 class="text-warning">Upload Your Fashion</h1>
+                <form action="/uploadfashion" method="post" enctype="multipart/form-data">
+
+                    <label for="">Product Name</label>
+                    <br>
+                    <input type="text" class="form-control" name="product_name" required>
+                    <br>
+                    <br>
+                    <label for="">Product Description</label>
+                    <textarea name="product_desc" id="" cols="30" rows="10" class="form-control" required></textarea>
+                    <br>
+                    <br>
+                    <label for=""> Product Cost</label>
+                    <br>
+                    <input type="number" class="form-control" required name="product_cost">
+                    <br>
+                    <br>
+                    <label for="">Fashion Category</label>
+                    <select name="product_category" id="" class="form-control" required>
+                        <option value="dresses">Dresses</option>
+                        <option value="handbags">Hand Bags</option>
+                        <option value="beds">Beds</option>
+                        <option value="socks">Socks</option>
+                        <option value="caps">Caps</option>
+                        <option value="belt">Belts</option>
+                    </select>
+                    <br>
+                    <br>
+                    <label for="">Product Image</label>
+                    <input type="file" class="form-control" name="product_image_name" required>
+                    <br>
+                    <br>
+                    <input type="submit" class="btn btn-danger" value="Submit">
+                </form>
+            </div>
+        </div>
+    </section>
+    
+</body>
+</html>
