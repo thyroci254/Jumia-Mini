@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <script src="../static/js/bootstrap.js"></script>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <b class="text-success">{{message}}</b>
+    <b class="text-danger">{{error}}</b>
+    
+    <form action="/login" method="post">
+        <label for="">Email Address</label>
+        <input type="email" class="form-control" name="email" required>
+        <br>
+        <label for="">Password</label>
+        <input type="password" class="form-control" name="password" required>
+        <br>
+        <input class="btn btn-primary" type="submit" value="Login">
+        <br>
+        <a href="/register">Don't have an Account? Click to register</a>
+
+
+      </form>
+    
+</body>
+</html>

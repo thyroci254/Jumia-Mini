@@ -1,7 +1,11 @@
 from flask import *
 
 app = Flask(__name__)
+# Session Key 
+app.secret_key = "money"
 import pymysql
+from functions import *
+from mpesa import *
 
 @app.route("/")
 def Homepage():
@@ -161,24 +165,96 @@ def uploadfashion():
     else:
      return render_template("uploadfashion.html", error = "Please add a fashion")
     
-    # User Registration
 
 @app.route("/about")
 def About():
     return "This is about page"
 
 # User Registration
-@app.route("/register")
+@app.route("/register",methods = ['POST', 'GET'])
 def Register():
-    return "This is register page"
+    if request.method == 'POST':
+        # user can add the details
+        username = request.form['username']
+        email = request.form['email']
+        gender = request.form['gender']
+        phone = request.form['phone']
+        password = request.form['password']
 
-@app.route("/login")
+        # session['username'] = username
+
+        # # Validate User password
+        # response = Verifypassword(password)
+        # if response == True:
+        #     # password met the required conditions
+        # else:
+        #     # password did not meet all the conditions
+        #     return render_template ("register.html", message = "Registration successfull")
+
+
+        # Connect to DB
+        connection  = pymysql.connect(host="localhost",user="root",password="",database="jumia_mini")
+        
+
+        # Create a cursor
+        Cursor = connection.cursor()
+        sql = "insert into users (username, email, gender, phone, password) value (%s, %s, %s, %s, %s)"
+
+        data = (username,  email, gender, phone, password)
+
+
+
+        Cursor.execute(sql, data)
+
+        # Save changes
+        connection.commit()
+        return render_template ("register.html", message = "Registration successfull")
+    else:
+        return render_template("register.html", error = "Please register")
+# Password  
+
+@app.route("/login", methods = ['POST', 'GET'])
 def Login():
-    return "This is login page"
+    if request.method ==  'POST':
+        # user can add the details
+        email = request.form['email']
+        password = request.form['password']
+        connection  = pymysql.connect(host="localhost",user="root",password="",database="jumia_mini")
+        Cursor = connection.cursor()
+
+        # check if user email exist
+        sql = "select * from users where email= %s and password = %s"
+        data = ( email, password)
+        Cursor.execute(sql, data)
+        # check if any result found
+        if Cursor.rowcount == 0:
+            # It means the username and password not found
+            return render_template("login.html", error = "Invalid Login Credentials")
+        else:
+            session['key'] = email
+            return redirect("/")
+    return render_template('login.html')
+
+
+    # Mpesa
+    # implement STK PUSH 
+@app.route("/mpesa", methods = ['POST'])
+def mpesa():
+    phone = request.form["phone"]
+    amount = request.form["amount"]
+
+    # Use Mpesa_payment function mpesa.py
+    # It accepts the phone and amount as arguments
+    #  mpesa_payment("1", phone) - Payment to be deducted from mpesa
+    mpesa_payment("amount", phone)
+    return '<h1> Please complete payment in your phone</h1>' \
+    '<a href="/" class="btn btn-dark btn-sm"> Go Back to Products </a> '
+
 
 @app.route("/logout")
 def Logout():
-    return "This is logout page"
+    session.clear()
+    return redirect("/login")
 
 if __name__ == "__main__":
     app.run(debug=True, port=4000)
